@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The One Big Beautiful Bill Act: Fiscal Structure and Distributional Effects</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-900: #042C53;
+    --blue-800: #0C447C;
+    --blue-700: #185fa5;
+    --blue-500: #378add;
+    --blue-300: #85b7eb;
+    --blue-100: #b5d4f4;
+    --blue-50:  #e6f1fb;
+    --gray-800: #2C2C2A;
+    --gray-600: #5F5E5A;
+    --gray-400: #888780;
+    --gray-200: #D3D1C7;
+    --gray-100: #F1EFE8;
+    --gray-50:  #FAFAF8;
+    --white:    #ffffff;
+    --rule:     #dce8f4;
+    --page-max: 900px;
+    --pad: 64px;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    color: var(--gray-800);
+    background: var(--gray-50);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── PAGE SHELL ── */
+  .page {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    background: var(--white);
+    box-shadow: 0 2px 24px rgba(0,0,0,0.07);
+  }
+
+  /* ── COVER ── */
+  .cover {
+    background: var(--blue-900);
+    padding: 80px var(--pad) 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 320px; height: 320px;
+    background: var(--blue-800);
+    border-radius: 50%;
+    transform: translate(40%, 40%);
+    opacity: 0.5;
+  }
+  .cover-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue-300);
+    margin-bottom: 20px;
+  }
+  .cover-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 42px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.2;
+    max-width: 580px;
+    margin-bottom: 24px;
+  }
+  .cover-subtitle {
+    font-size: 15px;
+    color: var(--blue-100);
+    max-width: 520px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 40px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .cover-meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .cover-meta-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue-300); }
+  .cover-meta-value { font-size: 13px; color: var(--white); font-weight: 500; }
+
+  /* ── ACCENT BAR ── */
+  .accent-bar {
+    height: 4px;
+    background: linear-gradient(90deg, var(--blue-700) 0%, var(--blue-300) 100%);
+  }
+
+  /* ── BODY CONTENT ── */
+  .content {
+    padding: 0 var(--pad);
+  }
+
+  /* ── SECTION ── */
+  .section {
+    padding: 52px 0 0;
+    border-top: 1px solid var(--rule);
+    margin-top: 52px;
+  }
+  .section:first-child { border-top: none; margin-top: 0; padding-top: 52px; }
+
+  .section-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue-700);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--blue-900);
+    line-height: 1.25;
+    margin-bottom: 20px;
+  }
+  .section-body {
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.75;
+    max-width: 720px;
+  }
+  .section-body p + p { margin-top: 12px; }
+  .section-body strong { color: var(--gray-800); font-weight: 600; }
+
+  /* ── EXEC SUMMARY CALLOUTS ── */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 28px 0;
+  }
+  .summary-card {
+    background: var(--blue-50);
+    border-left: 3px solid var(--blue-700);
+    padding: 18px 16px;
+    border-radius: 0 4px 4px 0;
+  }
+  .summary-card-value {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--blue-700);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .summary-card-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--gray-600);
+    letter-spacing: 0.03em;
+    line-height: 1.4;
+  }
+
+  /* ── KEY FINDING BOX ── */
+  .finding {
+    background: var(--gray-100);
+    border-left: 3px solid var(--blue-300);
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-radius: 0 4px 4px 0;
+    font-size: 13px;
+    color: var(--gray-600);
+    font-style: italic;
+    line-height: 1.6;
+  }
+  .finding strong { color: var(--blue-900); font-style: normal; }
+
+  /* ── FIGURE WRAPPERS ── */
+  .figure {
+    margin: 32px 0;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .figure-header {
+    background: var(--blue-900);
+    padding: 12px 18px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .figure-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue-300);
+    flex-shrink: 0;
+  }
+  .figure-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--white);
+  }
+  .figure-body {
+    padding: 24px 20px 16px;
+  }
+  .figure-note {
+    font-size: 10px;
+    color: var(--gray-400);
+    padding: 0 20px 14px;
+    line-height: 1.5;
+  }
+
+  /* ── CHART CANVASES ── */
+  .chart-wrap { position: relative; width: 100%; }
+
+  /* ── TABLES ── */
+  table.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  table.report-table thead tr {
+    background: var(--blue-700);
+  }
+  table.report-table thead th {
+    padding: 10px 14px;
+    color: var(--blue-50);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-align: left;
+  }
+  table.report-table thead th.right { text-align: right; white-space: nowrap; }
+  table.report-table .section-row td {
+    padding: 7px 14px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #5a82aa;
+    background: var(--blue-50);
+    border-bottom: 1px solid var(--blue-100);
+  }
+  table.report-table tbody tr.odd td  { background: var(--white); }
+  table.report-table tbody tr.even td { background: #f4f8fd; }
+  table.report-table tbody td {
+    padding: 9px 14px;
+    border-bottom: 0.5px solid var(--rule);
+    color: var(--gray-800);
+  }
+  table.report-table tbody td.right  { text-align: right; white-space: nowrap; font-weight: 500; color: var(--blue-700); }
+  table.report-table tbody td.muted  { text-align: right; white-space: nowrap; color: var(--gray-600); }
+  table.report-table tbody td.indent { padding-left: 28px; font-style: italic; color: var(--gray-600); }
+  table.report-table .subtotal td {
+    background: #dce8f4;
+    font-weight: 600;
+    color: var(--blue-800);
+    border-bottom: 1px solid var(--blue-100);
+  }
+  table.report-table .subtotal td.right { color: var(--blue-800); }
+  table.report-table .total td {
+    background: var(--blue-700);
+    font-weight: 500;
+    color: var(--blue-50);
+    border-bottom: none;
+  }
+  table.report-table .total td.right { color: var(--blue-50); }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--gray-600);
+  }
+  .legend-swatch {
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ── FOOTER ── */
+  .report-footer {
+    margin-top: 64px;
+    padding: 24px var(--pad);
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--white);
+  }
+  .footer-source {
+    font-size: 10px;
+    color: var(--gray-400);
+    line-height: 1.6;
+    max-width: 600px;
+  }
+  .footer-page {
+    font-size: 11px;
+    color: var(--gray-400);
+    white-space: nowrap;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    :root { --pad: 24px; }
+    .cover-title { font-size: 30px; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .cover-meta { flex-wrap: wrap; gap: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-eyebrow">Fiscal Policy Analysis</div>
+    <div class="cover-title">The One Big Beautiful Bill Act: Fiscal Structure and Distributional Effects</div>
+    <div class="cover-subtitle">A quantitative assessment of the OBBBA's tax revenue reductions, program spending cuts, and net deficit impact over the FY2025–2034 budget window.</div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Prepared</span>
+        <span class="cover-meta-value">August 2026</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Primary Sources</span>
+        <span class="cover-meta-value">CBO · JCT · BPC · TPC · Tax Foundation</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Budget Window</span>
+        <span class="cover-meta-value">FY2025 – FY2034</span>
+      </div>
+    </div>
+  </div>
+  <div class="accent-bar"></div>
+
+  <div class="content">
+
+    <!-- EXECUTIVE SUMMARY -->
+    <div class="section" style="border-top:none; margin-top:0;">
+      <div class="section-eyebrow">Executive Summary</div>
+      <div class="section-title">A historic tax cut, partially offset by program spending reductions</div>
+      <div class="section-body">
+        <p>Signed into law on July 4, 2025, the One Big Beautiful Bill Act (OBBBA) represents the most significant federal fiscal legislation since the 2012 American Taxpayer Relief Act. The law permanently extends the individual and business tax provisions of the 2017 Tax Cuts and Jobs Act (TCJA) — which were scheduled to expire at the end of 2025 — and layers on a suite of new tax reductions including deductions for tipped income, overtime pay, auto loan interest, and an enhanced senior deduction.</p>
+        <p>To partially offset those costs, the law enacts the largest cuts to Medicaid, SNAP, and federal student loan programs in modern legislative history. However, the spending reductions cover only approximately <strong>24 cents of every dollar of tax revenue lost</strong>, producing a substantial net increase in federal deficits over the decade.</p>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-card-value">−$4.5T</div>
+          <div class="summary-card-label">Net tax revenue reduction, FY2025–2034</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-value">−$1.1T</div>
+          <div class="summary-card-label">Net spending reduction, FY2025–2034</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-card-value">+$3.4T</div>
+          <div class="summary-card-label">Net deficit increase, FY2025–2034</div>
+        </div>
+      </div>
+
+      <div class="finding">
+        <strong>Bottom line:</strong> The OBBBA is structurally a large tax cut funded primarily by new federal borrowing. Program spending cuts — concentrated in Medicaid ($917B), student loans ($320B), and SNAP ($187B) — provide a meaningful but insufficient offset. Including estimated interest on incremental borrowing, the total fiscal cost rises to approximately <strong>$4.1 trillion</strong> over the decade. On a dynamic basis incorporating projected GDP growth of 0.7%, the Tax Foundation estimates the net deficit increase narrows to approximately $3.3 trillion.
+      </div>
+    </div>
+
+    <!-- SECTION 1: FISCAL TRANSFER CHART -->
+    <div class="section">
+      <div class="section-eyebrow">Section 1</div>
+      <div class="section-title">The fiscal transfer: program cuts funding tax relief</div>
+      <div class="section-body">
+        <p>The chart below frames the OBBBA's fiscal mechanics as a transfer: program spending cuts (shown below the zero line) are used to partially fund reductions in tax revenue (shown above the line). The visual disproportion between the green and blue bars captures the central fiscal tension in the legislation — the spending offsets are real but structurally insufficient to close the gap created by the tax revenue reductions.</p>
+        <p>New spending on defense and border security adds a further drag in the same direction as the tax cuts, reducing the net offset by $333 billion.</p>
+      </div>
+
+      <div class="figure">
+        <div class="figure-header">
+          <span class="figure-label">Figure 1</span>
+          <span class="figure-title">OBBBA fiscal transfer — spending cuts vs. tax revenue reductions (FY2025–2034, $T)</span>
+        </div>
+        <div class="figure-body">
+          <div class="legend">
+            <div class="legend-item"><div class="legend-swatch" style="background:#85b7eb;"></div>Spending cuts (offsets deficit)</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#b4b2a9;"></div>New spending (widens deficit)</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#185fa5;"></div>Tax revenue reductions (widens deficit)</div>
+          </div>
+          <div class="chart-wrap" style="height:340px;">
+            <canvas id="transferChart" role="img" aria-label="Bar chart showing OBBBA fiscal transfer. Spending cuts below zero on left, tax revenue cut +$4.5T on right."></canvas>
+          </div>
+        </div>
+        <div class="figure-note">Source: Bipartisan Policy Center analysis of CBO/JCT score. Net deficit increase (+$3.4T) excludes interest on new debt; total reaches $4.1T with interest.</div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: TAX REVENUE CUTS -->
+    <div class="section">
+      <div class="section-eyebrow">Section 2</div>
+      <div class="section-title">Tax revenue reductions: structure and composition</div>
+      <div class="section-body">
+        <p>The OBBBA reduces federal tax revenues by a net $4.5 trillion over the decade on a current-law basis. The single largest component — individual income tax rate reductions through permanent TCJA extension — accounts for $2.2 trillion, or nearly half of gross tax cuts before any offsets. The standard deduction expansion and AMT relief together add another $1.1 trillion.</p>
+        <p>Three revenue-raising provisions partially offset gross cuts of $5.2 trillion: the rollback of Inflation Reduction Act clean energy credits ($543B), restrictions on premium tax credit eligibility ($185B), and the retention of the TCJA's repeal of personal exemptions ($190B). These offsets reduce gross cuts to a net $4.5 trillion revenue loss.</p>
+      </div>
+
+      <div class="figure">
+        <div class="figure-header">
+          <span class="figure-label">Table 1</span>
+          <span class="figure-title">Tax revenue reductions by category — sorted descending (FY2025–2034)</span>
+        </div>
+        <div class="figure-body" style="padding-bottom:0;">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th class="right">10-Year Deficit Impact</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="section-row"><td colspan="2">Tax cuts</td></tr>
+              <tr class="odd"><td>Individual income tax rates (TCJA extension)</td><td class="right">+$2.20T</td></tr>
+              <tr class="even"><td>Business expensing, R&amp;D &amp; interest deductions</td><td class="right">+$0.65T</td></tr>
+              <tr class="odd"><td>Standard deduction (TCJA extension)</td><td class="right">+$0.64T</td></tr>
+              <tr class="even"><td>AMT relief (TCJA extension)</td><td class="right">+$0.44T</td></tr>
+              <tr class="odd"><td>All other tax cuts</td><td class="right">+$0.44T</td></tr>
+              <tr class="even"><td>Tips, overtime, auto loan interest &amp; senior deduction</td><td class="right">+$0.25T</td></tr>
+              <tr class="odd"><td>Child Tax Credit (TCJA extension + expansion)</td><td class="right">+$0.22T</td></tr>
+              <tr class="even"><td>Estate tax relief (TCJA extension)</td><td class="right">+$0.21T</td></tr>
+              <tr class="odd"><td>20% pass-through deduction (TCJA extension + expansion)</td><td class="right">+$0.18T</td></tr>
+              <tr class="subtotal"><td>Gross tax cuts</td><td class="right">+$5.23T</td></tr>
+              <tr class="section-row"><td colspan="2">Tax pay-fors</td></tr>
+              <tr class="odd"><td>IRA clean energy credit rollbacks</td><td class="right" style="color:#5a82aa;">−$0.54T</td></tr>
+              <tr class="even"><td>Premium tax credit eligibility restrictions</td><td class="right" style="color:#5a82aa;">−$0.19T</td></tr>
+              <tr class="odd"><td>Repeal of personal exemptions (TCJA extension)</td><td class="right" style="color:#5a82aa;">−$0.19T</td></tr>
+              <tr class="total"><td>Net tax revenue reduction</td><td class="right">−$4.50T</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="figure-note">Source: Bipartisan Policy Center analysis of CBO/JCT score.</div>
+      </div>
+
+      <!-- Distribution subsection -->
+      <div class="section-body" style="margin-top:28px;">
+        <p>The distribution of individual income tax cuts is highly skewed toward upper-income households. The top quintile (incomes above ~$226,000) captures approximately <strong>60% of total benefits</strong>, with an average annual tax cut of $12,540 in 2026. By contrast, the bottom quintile receives an average cut of $150 — a ratio of approximately 84:1 in absolute dollar terms.</p>
+        <p>The top 1% of earners (incomes above roughly $1 million) receive an average annual reduction of $75,410. This reflects the structural mechanics of rate-based cuts: percentage-point reductions in marginal rates deliver larger absolute savings to those with higher taxable incomes.</p>
+      </div>
+
+      <div class="figure">
+        <div class="figure-header">
+          <span class="figure-label">Table 2</span>
+          <span class="figure-title">Average annual tax cut by income level, 2026</span>
+        </div>
+        <div class="figure-body" style="padding-bottom:0;">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>Income group</th>
+                <th class="right">Approx. income range</th>
+                <th class="right">Avg. annual tax cut</th>
+                <th class="right">% of after-tax income</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="odd"><td>Bottom quintile</td><td class="muted">Under $36,400</td><td class="right">$150</td><td class="muted">0.8%</td></tr>
+              <tr class="even"><td>Second quintile</td><td class="muted">$36,400 – $70,000</td><td class="right">$830</td><td class="muted">1.6%</td></tr>
+              <tr class="odd"><td>Middle quintile</td><td class="muted">$70,000 – $124,100</td><td class="right">$1,780</td><td class="muted">2.1%</td></tr>
+              <tr class="even"><td>Fourth quintile</td><td class="muted">$124,100 – $226,100</td><td class="right">$4,800</td><td class="muted">3.0%</td></tr>
+              <tr class="odd"><td>Top quintile</td><td class="muted">Over $226,100</td><td class="right">$12,540</td><td class="muted">2.5%</td></tr>
+              <tr class="even"><td class="indent">Top 10%</td><td class="muted">Over $332,900</td><td class="right">$14,700</td><td class="muted">—</td></tr>
+              <tr class="odd"><td class="indent">Top 5%</td><td class="muted">Over $484,800</td><td class="right">~$30,000+</td><td class="muted">4.4%</td></tr>
+              <tr class="even"><td class="indent">Top 1%</td><td class="muted">Over ~$1,000,000</td><td class="right">$75,410</td><td class="muted">3.5%</td></tr>
+              <tr class="total"><td colspan="2">All households (average)</td><td class="right">$2,900</td><td class="right" style="color:#b5d4f4;">2.9%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="figure-note">Sources: Tax Policy Center; Gale &amp; Page, "One Big Beautiful Bill: A Preliminary Assessment" (TPC, March 2026); Center for American Progress (CBO/JCT data, Dec. 2025). Income ranges in 2025 dollars. Top 5% average is estimated. Individual outcomes will vary based on family structure, filing status, and eligibility for targeted provisions.</div>
+      </div>
+
+      <div class="finding">
+        <strong>Key finding:</strong> The individual income tax rate cuts — the single largest line item at $2.2 trillion — function through marginal rate reductions that are mathematically regressive in absolute dollar terms. Higher-income households with larger taxable income bases capture proportionally larger savings even when percentage-of-income benefits are similar across the upper-middle and upper quintiles.
+      </div>
+    </div>
+
+    <!-- SECTION 3: SPENDING CUTS -->
+    <div class="section">
+      <div class="section-eyebrow">Section 3</div>
+      <div class="section-title">Program spending reductions: scale and composition</div>
+      <div class="section-body">
+        <p>The OBBBA enacts $1.45 trillion in gross spending reductions, offset by $333 billion in new spending on defense and border security, for a net spending reduction of approximately $1.1 trillion. This is the largest set of cuts to federal entitlement programs since the Balanced Budget Act of 1997.</p>
+        <p>Medicaid reforms — including new work requirements, more frequent eligibility redeterminations, and reductions in provider taxes used to draw down federal matching funds — account for $917 billion, or 63% of gross spending cuts. CBO estimates these changes will result in approximately 11.8 million people losing Medicaid coverage over the decade. Student loan program restructuring ($320B) and SNAP reforms ($187B) account for the remainder of meaningful cuts.</p>
+        <p>These reductions are concentrated among lower-income households — the same population that receives the smallest absolute benefit from the tax provisions — creating an asymmetric net fiscal impact across the income distribution when both sides of the ledger are considered together.</p>
+      </div>
+
+      <div class="figure">
+        <div class="figure-header">
+          <span class="figure-label">Table 3</span>
+          <span class="figure-title">Spending changes by category (FY2025–2034)</span>
+        </div>
+        <div class="figure-body" style="padding-bottom:0;">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th class="right">10-Year Deficit Impact</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="section-row"><td colspan="2">Spending cuts</td></tr>
+              <tr class="odd"><td>Medicaid reforms</td><td class="right" style="color:#5a82aa;">−$0.917T</td></tr>
+              <tr class="even"><td>Federal student loan reforms</td><td class="right" style="color:#5a82aa;">−$0.320T</td></tr>
+              <tr class="odd"><td>SNAP (food stamps) reforms</td><td class="right" style="color:#5a82aa;">−$0.187T</td></tr>
+              <tr class="even"><td>All other spending cuts</td><td class="right" style="color:#5a82aa;">−$0.026T</td></tr>
+              <tr class="subtotal"><td>Gross spending cuts</td><td class="right" style="color:#0c447c;">−$1.450T</td></tr>
+              <tr class="section-row"><td colspan="2">Spending increases</td></tr>
+              <tr class="odd"><td>Immigration enforcement &amp; border security</td><td class="right">+$0.175T</td></tr>
+              <tr class="even"><td>Increased military spending</td><td class="right">+$0.150T</td></tr>
+              <tr class="odd"><td>All other spending increases</td><td class="right">+$0.008T</td></tr>
+              <tr class="subtotal"><td>Gross spending increases</td><td class="right" style="color:#0c447c;">+$0.333T</td></tr>
+              <tr class="total"><td>Net spending reduction</td><td class="right">−$1.117T</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="figure-note">Source: Bipartisan Policy Center analysis of CBO score. Net spending reduction offsets approximately 24 cents of every dollar of tax revenue lost.</div>
+      </div>
+
+      <div class="finding">
+        <strong>Key finding:</strong> Medicaid cuts alone ($917B) are nearly as large as the entire net spending reduction ($1.1T), meaning virtually all other program cuts are absorbed by new spending increases on defense and border security. The offset ratio — spending cuts to tax revenue reductions — is approximately <strong>1:4</strong>.
+      </div>
+    </div>
+
+    <!-- SECTION 4: NET DEFICIT -->
+    <div class="section">
+      <div class="section-eyebrow">Section 4</div>
+      <div class="section-title">Net deficit impact: $3.4 trillion over the decade</div>
+      <div class="section-body">
+        <p>Combining the $4.5 trillion net tax revenue reduction with the $1.1 trillion net spending reduction, the OBBBA increases federal deficits by approximately $3.4 trillion over FY2025–2034 on a conventional (static) basis. This figure rises to approximately <strong>$4.1 trillion</strong> when BPC's estimate of incremental interest on new borrowing (~$700 billion) is included.</p>
+        <p>The Tax Foundation's dynamic score, which incorporates an estimated 0.7% increase in long-run GDP from the bill's investment incentives, reduces the conventional figure by roughly $837 billion to approximately <strong>$3.3 trillion</strong> — meaning economic growth pays for approximately 16% of the gross tax cuts under their model. CBO's dynamic analysis of the House version found the opposite: that the economic drag from higher debt marginally worsened the fiscal outcome relative to the static score.</p>
+        <p>It is also notable that more than 60% of the law's net cost is concentrated in the first half of the budget window, before temporary provisions (tips, overtime, senior deduction) expire and before some scheduled spending cuts take full effect. A future Congress that extends those expiring provisions without offsetting savings would add approximately $800 billion to the 10-year cost.</p>
+      </div>
+
+      <div class="figure">
+        <div class="figure-header">
+          <span class="figure-label">Figure 2</span>
+          <span class="figure-title">OBBBA — net deficit impact summary (FY2025–2034, $T)</span>
+        </div>
+        <div class="figure-body">
+          <div class="chart-wrap" style="height:200px;">
+            <canvas id="deficitSummary" role="img" aria-label="Horizontal bar chart showing fiscal components: tax cuts -$4.5T, spending increases +$0.3T, spending cuts -$1.1T, net deficit +$3.4T."></canvas>
+          </div>
+        </div>
+        <div class="figure-note">Source: CBO/JCT via Bipartisan Policy Center. Dynamic estimate (Tax Foundation): +$3.3T. With interest on new debt: +$4.1T.</div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: CONCLUSIONS -->
+    <div class="section">
+      <div class="section-eyebrow">Section 5</div>
+      <div class="section-title">Conclusions</div>
+      <div class="section-body">
+        <p>The One Big Beautiful Bill Act is, in structural terms, the largest tax cut in U.S. history measured as a share of the economy since 1940. Its fiscal mechanics reflect a deliberate policy choice: to make permanent the 2017 TCJA rate reductions and deduction changes — with enhancements — and to partially offset that cost through cuts to means-tested entitlement programs.</p>
+        <p>Three conclusions follow from the analysis above:</p>
+        <p><strong>1. The offset is real but insufficient.</strong> The program spending cuts are historically significant — Medicaid in particular represents the largest single reduction to a federal entitlement in decades. But they cover only about one-quarter of the tax revenue cost. The remainder is financed by new federal borrowing, adding meaningfully to a debt trajectory already described by CBO as historically unprecedented.</p>
+        <p><strong>2. The distributional asymmetry is structural.</strong> The income tax reductions deliver their largest absolute benefits to upper-income households through the mechanics of marginal rate cuts and expanded deductions. The spending reductions fall most heavily on lower-income households through Medicaid and SNAP. The net distributional effect — combining both sides — is more regressive than either side in isolation.</p>
+        <p><strong>3. The 10-year window understates the long-run cost.</strong> The conventional $3.4 trillion figure reflects a budget window that captures some temporary provisions expiring. If a future Congress extends those provisions — as has consistently occurred with prior expiring tax cuts — the long-run cost could approach or exceed $5 trillion inclusive of interest.</p>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- FOOTER -->
+  <div class="report-footer">
+    <div class="footer-source">
+      <strong>Sources:</strong> Congressional Budget Office (CBO); Joint Committee on Taxation (JCT); Bipartisan Policy Center; Tax Policy Center; Tax Foundation; Gale &amp; Page, "One Big Beautiful Bill: A Preliminary Assessment," TPC (March 2026); Center for American Progress (December 2025). All figures on a current-law baseline unless otherwise noted.
+    </div>
+    <div class="footer-page">August 2026</div>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+// ── FIGURE 1: TRANSFER CHART ──
+(function() {
+  const BLUE_LIGHT = '#85b7eb';
+  const BLUE_DARK  = '#185fa5';
+  const GRAY       = '#b4b2a9';
+  const muted      = '#888780';
+  const gridCol    = '#e1e0d9';
+  const textSec    = '#5F5E5A';
+
+  const labels = [
+    ['Medicaid', 'cuts'],
+    ['Student loan', 'reforms'],
+    ['SNAP cuts'],
+    ['Other spending', 'cuts'],
+    ['New spending', '(defense, border)'],
+    ['Net tax', 'revenue cut']
+  ];
+  const values = [-0.917, -0.32, -0.187, -0.026, 0.33, 4.5];
+  const colors = [BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT, BLUE_LIGHT, GRAY, BLUE_DARK];
+  const br = values.map(v => v > 0
+    ? {topLeft:4,topRight:4,bottomLeft:0,bottomRight:0}
+    : {topLeft:0,topRight:0,bottomLeft:4,bottomRight:4});
+
+  const deficitPlugin = {
+    id: 'deficitAnnotation',
+    afterDraw(chart) {
+      const { ctx, chartArea: { left, right, top } } = chart;
+      const PAD = 14;
+      const L1 = 'Net 10-year deficit increase';
+      const L2 = '+$3.4T';
+      const L3 = '($4.1T with interest)';
+      ctx.save();
+      ctx.font = '11px Inter, sans-serif';
+      const w1 = ctx.measureText(L1).width;
+      ctx.font = '500 22px Inter, sans-serif';
+      const w2 = ctx.measureText(L2).width;
+      ctx.font = '11px Inter, sans-serif';
+      const w3 = ctx.measureText(L3).width;
+      const contentW = Math.max(w1, w2, w3);
+      const boxW = contentW + PAD * 2;
+      const boxH = 72; const r = 6;
+      const midX = left + (right - left) * 0.42;
+      const boxX = midX - boxW / 2;
+      const boxY = top + 14;
+      ctx.beginPath();
+      ctx.moveTo(boxX+r,boxY); ctx.lineTo(boxX+boxW-r,boxY);
+      ctx.quadraticCurveTo(boxX+boxW,boxY,boxX+boxW,boxY+r);
+      ctx.lineTo(boxX+boxW,boxY+boxH-r);
+      ctx.quadraticCurveTo(boxX+boxW,boxY+boxH,boxX+boxW-r,boxY+boxH);
+      ctx.lineTo(boxX+r,boxY+boxH);
+      ctx.quadraticCurveTo(boxX,boxY+boxH,boxX,boxY+boxH-r);
+      ctx.lineTo(boxX,boxY+r);
+      ctx.quadraticCurveTo(boxX,boxY,boxX+r,boxY);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(238,245,252,0.96)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(24,95,165,0.22)'; ctx.lineWidth = 0.75; ctx.stroke();
+      const cx = boxX + boxW / 2;
+      ctx.font = '11px Inter, sans-serif'; ctx.fillStyle = '#5a82aa';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText(L1, cx, boxY + 11);
+      ctx.font = '600 22px Inter, sans-serif'; ctx.fillStyle = '#185fa5';
+      ctx.fillText(L2, cx, boxY + 28);
+      ctx.font = '11px Inter, sans-serif'; ctx.fillStyle = '#8aa0b8';
+      ctx.fillText(L3, cx, boxY + 55);
+      ctx.restore();
+    }
+  };
+
+  const barLabelPlugin = {
+    id: 'barLabels',
+    afterDatasetDraw(chart) {
+      const { ctx } = chart;
+      const meta = chart.getDatasetMeta(0);
+      meta.data.forEach((bar, i) => {
+        const v = values[i];
+        if (Math.abs(v) < 0.01) return;
+        const label = (v >= 0 ? '+' : '\u2212') + '$' + Math.abs(v).toFixed(2) + 'T';
+        ctx.save();
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.font = '500 11px Inter, sans-serif'; ctx.fillStyle = '#3a3a38';
+        ctx.fillText(label, bar.x, bar.y + (v > 0 ? -10 : 10));
+        ctx.restore();
+      });
+    }
+  };
+
+  new Chart(document.getElementById('transferChart'), {
+    type: 'bar',
+    plugins: [deficitPlugin, barLabelPlugin],
+    data: {
+      labels,
+      datasets: [{ data: values, backgroundColor: colors, borderColor: colors, borderWidth: 0, borderRadius: br, borderSkipped: false }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      layout: { padding: { top: 10 } },
+      plugins: { legend: { display: false }, tooltip: { callbacks: {
+        title: c => c[0].label.replace(/,/g,' '),
+        label: c => (c.raw>=0?'+':'\u2212')+'$'+Math.abs(c.raw).toFixed(2)+'T'
+      }}},
+      scales: {
+        x: { grid:{display:false}, border:{color:gridCol}, ticks:{color:muted,font:{size:11},maxRotation:0,autoSkip:false} },
+        y: { min:-2, max:5, ticks:{color:muted,font:{size:11},stepSize:1,
+          callback: v => v===0?'$0':(v>0?'+':'\u2212')+'$'+Math.abs(v).toFixed(0)+'T'},
+          grid:{color:gridCol,lineWidth:1}, border:{display:false},
+          title:{display:true,text:'10-year fiscal impact',color:textSec,font:{size:11}} }
+      }
+    }
+  });
+})();
+
+// ── FIGURE 2: DEFICIT SUMMARY ──
+(function() {
+  const muted   = '#888780';
+  const gridCol = '#e1e0d9';
+  const textSec = '#5F5E5A';
+
+  const labels = ['Net tax revenue cuts','New spending (defense, border)','Program spending cuts','Net deficit increase'];
+  const values = [4.5, 0.33, -1.45, 3.38];
+  const colors = ['#185fa5','#b4b2a9','#85b7eb','#0c447c'];
+  const br = values.map(v => v > 0
+    ? {topLeft:0,topRight:4,bottomLeft:0,bottomRight:4}
+    : {topLeft:4,topRight:0,bottomLeft:4,bottomRight:0});
+
+  const barLabelPlugin = {
+    id: 'barLabels2',
+    afterDatasetDraw(chart) {
+      const { ctx } = chart;
+      const meta = chart.getDatasetMeta(0);
+      meta.data.forEach((bar, i) => {
+        const v = values[i];
+        const label = (v >= 0 ? '+' : '\u2212') + '$' + Math.abs(v).toFixed(2) + 'T';
+        ctx.save();
+        ctx.textAlign = v >= 0 ? 'left' : 'right';
+        ctx.textBaseline = 'middle';
+        ctx.font = '500 11px Inter, sans-serif'; ctx.fillStyle = '#3a3a38';
+        ctx.fillText(label, bar.x + (v >= 0 ? 6 : -6), bar.y);
+        ctx.restore();
+      });
+    }
+  };
+
+  new Chart(document.getElementById('deficitSummary'), {
+    type: 'bar',
+    indexAxis: 'y',
+    plugins: [barLabelPlugin],
+    data: {
+      labels,
+      datasets: [{ data: values, backgroundColor: colors, borderColor: colors, borderWidth: 0, borderRadius: br, borderSkipped: false }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      layout: { padding: { right: 70 } },
+      plugins: { legend: { display: false }, tooltip: { callbacks: {
+        label: c => (c.raw>=0?'+':'\u2212')+'$'+Math.abs(c.raw).toFixed(2)+'T'
+      }}},
+      scales: {
+        x: { min:-2, max:5.5, ticks:{color:muted,font:{size:11},stepSize:1,
+          callback: v => v===0?'$0':(v>0?'+':'\u2212')+'$'+Math.abs(v).toFixed(0)+'T'},
+          grid:{color:gridCol,lineWidth:1}, border:{display:false},
+          title:{display:true,text:'10-year fiscal impact',color:textSec,font:{size:11}} },
+        y: { grid:{display:false}, border:{color:gridCol}, ticks:{color:muted,font:{size:11},crossAlign:'far'} }
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
