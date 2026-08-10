@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Macro Research</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0f1f3d;
+      --navy-light: #162847;
+      --gold: #c9a84c;
+      --gold-light: #e2c47a;
+      --text-primary: #1a1a2e;
+      --text-secondary: #4a5568;
+      --text-muted: #718096;
+      --surface: #ffffff;
+      --surface-alt: #f7f8fa;
+      --border: #e2e8f0;
+      --border-hover: #cbd5e0;
+      --tag-bg: #eef2ff;
+      --tag-text: #3730a3;
+      --radius-card: 12px;
+      --radius-sm: 6px;
+      --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+      --shadow-card-hover: 0 4px 12px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.10);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--surface-alt);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--navy);
+      padding: 3.5rem 2rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .site-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .site-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      color: #ffffff;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+
+    .site-subtitle {
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── Main content ── */
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    /* ── Report grid ── */
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* ── Report card ── */
+    .report-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+      overflow: hidden;
+    }
+
+    .report-card:hover {
+      box-shadow: var(--shadow-card-hover);
+      transform: translateY(-2px);
+      border-color: var(--border-hover);
+    }
+
+    .card-accent-bar {
+      height: 3px;
+      background: linear-gradient(90deg, var(--navy), var(--gold));
+    }
+
+    .card-body {
+      padding: 1.5rem 1.5rem 1.25rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.875rem;
+      flex-wrap: wrap;
+    }
+
+    .card-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+    }
+
+    .card-date {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+      margin-bottom: 0.625rem;
+    }
+
+    .card-description {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .card-footer {
+      padding: 0.875rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-cta {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: gap 0.15s ease;
+    }
+
+    .report-card:hover .card-cta {
+      gap: 0.6rem;
+    }
+
+    .card-cta svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 12px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 2.5rem 1.25rem 2rem; }
+      main { padding: 2rem 1rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <p class="site-eyebrow">Independent Analysis</p>
+    <h1 class="site-title">Macro Research</h1>
+    <p class="site-subtitle">Analytical perspectives on fiscal policy, macroeconomics, and capital markets.</p>
+  </header>
+
+  <main>
+    <p class="section-label">Reports</p>
+    <div class="report-grid">
+
+      <!-- OBBB Report -->
+      <a class="report-card" href="obbb_report.html">
+        <div class="card-accent-bar"></div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag">Fiscal Policy</span>
+            <span class="card-date">2025</span>
+          </div>
+          <h2 class="card-title">One Big Beautiful Bill Act</h2>
+          <p class="card-description">A summary overview of fiscal effects on government programs and tax revenue stemming from the 2025 OBBBA.</p>
+        </div>
+        <div class="card-footer">
+          <span class="card-cta">
+            View report
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- Placeholder for future reports — remove or replace as needed -->
+      <!-- 
+      <a class="report-card" href="your_next_report.html">
+        <div class="card-accent-bar"></div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag">Category</span>
+            <span class="card-date">2025</span>
+          </div>
+          <h2 class="card-title">Report Title</h2>
+          <p class="card-description">Report description goes here.</p>
+        </div>
+        <div class="card-footer">
+          <span class="card-cta">
+            View report
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </span>
+        </div>
+      </a>
+      -->
+
+    </div>
+  </main>
+
+  <footer>
+    Macro Research &mdash; Independent economic analysis
+  </footer>
+
+</body>
+</html>
