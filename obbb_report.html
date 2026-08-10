@@ -568,7 +568,7 @@
           <span class="figure-title">OBBBA — net deficit impact summary (FY2025–2034, $T)</span>
         </div>
         <div class="figure-body">
-          <div class="chart-wrap" style="height:200px;">
+          <div class="chart-wrap" style="height:240px;">
             <canvas id="deficitSummary" role="img" aria-label="Horizontal bar chart showing fiscal components: tax cuts -$4.5T, spending increases +$0.3T, spending cuts -$1.1T, net deficit +$3.4T."></canvas>
           </div>
         </div>
@@ -731,14 +731,26 @@
     afterDatasetDraw(chart) {
       const { ctx } = chart;
       const meta = chart.getDatasetMeta(0);
+      const PAD = 8;
       meta.data.forEach((bar, i) => {
         const v = values[i];
         const label = (v >= 0 ? '+' : '\u2212') + '$' + Math.abs(v).toFixed(2) + 'T';
         ctx.save();
-        ctx.textAlign = v >= 0 ? 'left' : 'right';
+        ctx.font = '600 12px Inter, sans-serif';
+        const tw = ctx.measureText(label).width;
+        // always place label beyond the bar tip, away from zero
+        const lx = v >= 0 ? bar.x + PAD : bar.x - PAD;
+        const align = v >= 0 ? 'left' : 'right';
+        const ly = bar.y;
+        // white knockout rectangle
+        const bgX = v >= 0 ? lx - 2 : lx - tw - 2;
+        ctx.fillStyle = 'rgba(255,255,255,0.85)';
+        ctx.fillRect(bgX, ly - 8, tw + 4, 16);
+        // label text
+        ctx.textAlign = align;
         ctx.textBaseline = 'middle';
-        ctx.font = '500 11px Inter, sans-serif'; ctx.fillStyle = '#3a3a38';
-        ctx.fillText(label, bar.x + (v >= 0 ? 6 : -6), bar.y);
+        ctx.fillStyle = '#0C447C';
+        ctx.fillText(label, lx, ly);
         ctx.restore();
       });
     }
@@ -754,7 +766,7 @@
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      layout: { padding: { right: 70 } },
+      layout: { padding: { right: 80 } },
       plugins: { legend: { display: false }, tooltip: { callbacks: {
         label: c => (c.raw>=0?'+':'\u2212')+'$'+Math.abs(c.raw).toFixed(2)+'T'
       }}},
